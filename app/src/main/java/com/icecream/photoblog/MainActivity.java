@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-mAuth.signOut();
-sendToLogin();
+        mAuth.signOut();
+        sendToLogin();
     }
 
     private void sendToLogin() {

@@ -1,8 +1,5 @@
 package com.icecream.photoblog;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,11 +36,23 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginEmailText = (EditText) findViewById(R.id.login_email);
-        loginPassText = (EditText) findViewById(R.id.login_password);
-        loginBtn = (Button) findViewById(R.id.login_btn);
-        loginRegBtn = (Button) findViewById(R.id.login_reg_btn);
-        loginProgress = (ProgressBar) findViewById(R.id.login_progress);
+        loginEmailText = findViewById(R.id.login_email);
+        loginPassText = findViewById(R.id.login_password);
+        loginBtn = findViewById(R.id.login_btn);
+        loginRegBtn = findViewById(R.id.login_reg_btn);
+        loginProgress = findViewById(R.id.login_progress);
+
+
+        loginRegBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent regIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(regIntent);
+
+            }
+        });
+
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,26 +61,36 @@ public class LoginActivity extends AppCompatActivity {
                 String loginEmail = loginEmailText.getText().toString();
                 String loginPass = loginPassText.getText().toString();
 
-                if(!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPass)) {
+                if(!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPass)){
                     loginProgress.setVisibility(View.VISIBLE);
 
                     mAuth.signInWithEmailAndPassword(loginEmail, loginPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()) {
+
+                            if(task.isSuccessful()){
+
                                 sendToMain();
+
                             } else {
+
                                 String errorMessage = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this, "Error : "+errorMessage, Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
+
+
                             }
 
-                            loginProgress.setVisibility(View.VISIBLE);
+                            loginProgress.setVisibility(View.INVISIBLE);
+
                         }
                     });
+
                 }
+
 
             }
         });
+
 
     }
 
@@ -76,17 +98,22 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser != null) {
+        if(currentUser != null){
+
             sendToMain();
+
         }
+
+
     }
 
     private void sendToMain() {
+
         Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(mainIntent);
         finish();
+
     }
 }
