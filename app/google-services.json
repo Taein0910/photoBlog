@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "727712328680",
+    "firebase_url": "https://photoblog-9fc4f.firebaseio.com",
+    "project_id": "photoblog-9fc4f",
+    "storage_bucket": "photoblog-9fc4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727712328680:android:db6db5c971f13247d8925d",
+        "android_client_info": {
+          "package_name": "com.icecream.photoblog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727712328680-oq1nm08ubi9mst4vsgmqi0c9e938qp8b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icecream.photoblog",
+            "certificate_hash": "b433d3f1e0c69167571e5f4d2ee14acc26b53771"
+          }
+        },
+        {
+          "client_id": "727712328680-e90g4cvq24k7hggjma16jsmsc4oiitko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfDrku9tZgzb5bhEhK31GN0GkXl0U8L_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727712328680-e90g4cvq24k7hggjma16jsmsc4oiitko.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

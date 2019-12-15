@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".LoginActivity"
+    android:orientation="vertical">
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/login_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="환영합니다"
+        android:textColor="#fff"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:paddingTop="64dp"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그인하세요"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:textSize="35dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/login_email"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:hint="Email"
+        android:textSize="18sp"
+        android:textColor="#fff"
+        android:textColorHint="@color/whiteTransparentHalf"
+        android:inputType="textEmailAddress"
+        android:backgroundTint="#fff"
+        android:layout_marginTop="54dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <EditText
+        android:id="@+id/login_password"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textSize="18sp"
+        android:hint="Password"
+        android:textColor="#fff"
+        android:backgroundTint="#fff"
+        android:textColorHint="@color/whiteTransparentHalf"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:textColor="#fff"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="로그인하기"/>
+
+
+    <Button
+        android:id="@+id/login_reg_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#fff"
+        android:text="새로운 계정 만들기"
+        android:textColor="@color/colorAccent" />
+
+</LinearLayout>
