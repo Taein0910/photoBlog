@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.solver.widgets.Snapshot;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -58,40 +60,34 @@ public class SetupActivity extends AppCompatActivity {
         setupName = findViewById(R.id.setup_name);
         setupBtn = findViewById(R.id.setup_btn);
         setupProgress =findViewById(R.id.setup_progress);
+
+
         setupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user_name = setupName.getText().toString();
+                final String user_name = setupName.getText().toString();
 
-                if(!TextUtils.isEmpty(user_name) && mainImageURI !=null) {
+                if(!TextUtils.isEmpty(user_name) && mainImageURI != null) {
 
                     String user_id = firebaseAuth.getCurrentUser().getUid();
-                    setupProgress.setVisibility(View.VISIBLE);
 
-                    StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
-                    image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    StorageReference image_path = storageReference.child("profile_images").child(user_id+".jpg");
+                    image_path.putFile(mainImageURI);
+                    image_path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
                         @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        public void onSuccess(Uri uri) {
+                            Toast.makeText(SetupActivity.this, "업로드 완료", Toast.LENGTH_SHORT).show();
 
-                            if(task.isSuccessful()) {
-
-                                UploadTask.TaskSnapshot downloadUri = task.getResult();
-                                Toast.makeText(SetupActivity.this, "이미지가 업로드되었습니다.", Toast.LENGTH_LONG).show();
-
-
-                            } else {
-                                String error = task.getException().getMessage();
-                                Toast.makeText(SetupActivity.this, "오류 : "+error, Toast.LENGTH_LONG).show();
                             }
-
-                            setupProgress.setVisibility(View.INVISIBLE);
-
-
-                        }
-                    });
+                        });
+                    } else {
+                    Toast.makeText(SetupActivity.this, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+                Toast.makeText(SetupActivity.this, "업로드 완료", Toast.LENGTH_SHORT).show();
+                   }
+                });
+
 
         setupImage.setOnClickListener(new View.OnClickListener() {
             @Override
