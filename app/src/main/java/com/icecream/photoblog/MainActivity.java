@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_setting_btn:
 
-                //Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
-                //startActivity(settingsIntent);
+                Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
+                startActivity(settingsIntent);
 
                 return true;
 
@@ -80,10 +80,15 @@ public class MainActivity extends AppCompatActivity {
         sendToLogin();
     }
 
+
+
     private void sendToLogin() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
     }
+
+
+
 
 }
