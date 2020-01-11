@@ -75,7 +75,16 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
 
                                 String errorMessage = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
+                                if(errorMessage == "The email address is badly formatted.") {
+                                    Toast.makeText(LoginActivity.this, "Error : " + "올바른 이메일 주소를 입력하세요.", Toast.LENGTH_LONG).show();
+                                } else if(errorMessage == "The password is invalid or the user does not have a password.") {
+                                        Toast.makeText(LoginActivity.this, "Error : " + "비밀번호가 올바르지 않습니다.", Toast.LENGTH_LONG).show();
+                                } else if(errorMessage == "There is no user record corresponding to this identifier. The user may have been deleted.") {
+                                    Toast.makeText(LoginActivity.this, "Error : " + "일치하는 회원 정보를 찾을 수 없습니다. 회원가입되어 있는지 확인하세요.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
+                                }
+
 
 
                             }

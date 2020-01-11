@@ -131,8 +131,8 @@ public class SetupActivity extends AppCompatActivity {
                     }
 
                 } else {
-
-                    storeFirestore(null, user_name);
+                    String default_uri = "https://images-eu.ssl-images-amazon.com/images/I/21cajMvmjVL.png";
+                    storeFirestore(Uri.parse(default_uri), user_name);
                 }
                    }
                 });
