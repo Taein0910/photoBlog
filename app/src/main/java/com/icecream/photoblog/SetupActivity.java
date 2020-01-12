@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,6 +82,7 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
+
                 if(task.isSuccessful()) {
 
                     if(task.getResult().exists()) {
@@ -88,6 +90,8 @@ public class SetupActivity extends AppCompatActivity {
                         String name = task.getResult().getString("name");
                         String image = task.getResult().getString("image");
                         mainImageURI = Uri.parse(image);
+                        Log.e("debug",image);
+
 
                         setupName.setText(name);
                         RequestOptions placeholderRequest = new RequestOptions();
@@ -164,6 +168,7 @@ public class SetupActivity extends AppCompatActivity {
         if(uri != null) {
 
         } else {
+            Toast.makeText(SetupActivity.this, "이미지 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show();
 
         }
         Toast.makeText(SetupActivity.this, "이미지 업로드 중...", Toast.LENGTH_SHORT).show();
