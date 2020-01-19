@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.storage.StorageManager;
@@ -37,13 +38,24 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+import id.zelory.compressor.Compressor;
 import io.grpc.Context;
+
+import static com.google.firebase.firestore.FieldValue.*;
+import static io.opencensus.tags.TagValue.MAX_LENGTH;
 
 public class NewPostActivity extends AppCompatActivity {
 
+    private static final int MAX_LENGTH = 100;
     private Toolbar newPostToolbar;
 
     private ImageView newPostImage;
@@ -56,8 +68,11 @@ public class NewPostActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
+    private FirebaseStorage storage;
 
     private String current_user_id;
+
+    private Bitmap compressedImageFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +82,7 @@ public class NewPostActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
 
         current_user_id = firebaseAuth.getCurrentUser().getUid();
 
@@ -94,97 +110,106 @@ public class NewPostActivity extends AppCompatActivity {
         newPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("debug","onclick");
 
                 final String desc = newPostDesc.getText().toString();
 
                 if(!TextUtils.isEmpty(desc) && postImageUri != null) {
                     newPostProgress.setVisibility(View.VISIBLE);
 
-                    final String randomName = FieldValue.serverTimestamp().toString();
+                    final String randomName = random();
 
-                    /////////////
-                    StorageReference storageRef = Storage.getRefersenceFromUrl("gs://photoblog-9fc4f.appspot.com").child("post_images/" + randomName);
-                    final UploadTask uploadTask;
-                    Uri file = null;
-                    uploadTask = storageRef.putFile(file);
-                    final ProgressDialog progressDialog = new ProgressDialog(NewPostActivity.this, R.style.Theme_AppCompat_DayNight_Dialog);
-                    progressDialog.setMessage("업로드중...");
-                    progressDialog.show();
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            Log.v("알림", "사진 업로드 실패");
-                            progressDialog.dismiss();
-                            exception.printStackTrace();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            Log.v("알림", "사진 업로드 성공 ");
-                            progressDialog.dismiss();
-                            Map<String, Object> postMap = new HashMap<>();
-                            postMap.put("image_url", uploadTask.getResult().toString());
-                            postMap.put("desc", desc);
-                            postMap.put("user_id", current_user_id);
-                            //postMap.put("timestamp", randomName);
 
-                            firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(NewPostActivity.this, "포스트가 게시되었습니다", Toast.LENGTH_SHORT).show();
-                                        Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
-                                        startActivity(mainIntent);
-                                        finish();
 
-                                    } else {
 
-                                    }
-                                    newPostProgress.setVisibility(View.INVISIBLE);
 
-                                }
-                            });
-                        }
-                    });
-                    /////////////////
+ /*
+ StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://photoblog-9fc4f.appspot.com");
+ storageReference.child("posts").child(randomName+".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 
-/*
+ @Override
+ public void onSuccess(Uri uri) {
+
+ */
+
                     StorageReference filePath = storageReference.child("post_images").child(randomName + ".jpg");
                     filePath.putFile(postImageUri);
                     filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
                         @Override
-                        public void onSuccess(Uri uri) {
+                        public void onSuccess(final Uri uri) {
+                            Toast.makeText(NewPostActivity.this, "이미지를 업로드 중입니다...", Toast.LENGTH_LONG).show();
+                            Log.e("debug","onSuccess");
 
-                            Map<String, Object> postMap = new HashMap<>();
-                            postMap.put("image_url", uri);
-                            postMap.put("desc", desc);
-                            postMap.put("user_id", current_user_id);
-                            //postMap.put("timestamp", randomName);
+                            File newImageFile = new File(postImageUri.getPath());
+                            try {
+                                compressedImageFile = new Compressor(NewPostActivity.this)
+                                        .setMaxHeight(200)
+                                        .setMaxWidth(200)
+                                        .setQuality(10)
+                                        .compressToBitmap(newImageFile);
 
-                            firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            compressedImageFile.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            final byte[] thumbData = baos.toByteArray();
+
+                            UploadTask uploadTask = storageReference
+                                    .child("post_images/thumbs").child(randomName + ".jpg").putBytes(thumbData);
+
+                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<DocumentReference> task) {
-                                    if(task.isSuccessful()) {
-                                        Toast.makeText(NewPostActivity.this, "포스트가 게시되었습니다", Toast.LENGTH_SHORT).show();
-                                        Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
-                                        startActivity(mainIntent);
-                                        finish();
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                                    } else {
 
-                                    }
-                                    newPostProgress.setVisibility(View.INVISIBLE);
+                                    Map<String, Object> postMap = new HashMap<>();
+                                    postMap.put("image_url", uri.toString());
+                                    postMap.put("desc", desc);
+                                    postMap.put("user_id", current_user_id);
+                                    postMap.put("timestamp", FieldValue.serverTimestamp());
+
+                                    Log.e("debug", uri.toString());
+
+
+                                    firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            Log.e("debug","onComplete");
+
+                                            if(task.isSuccessful()) {
+                                                Log.e("debug","isSucessful");
+                                                Toast.makeText(NewPostActivity.this, "포스트가 게시되었습니다", Toast.LENGTH_SHORT).show();
+                                                Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
+                                                startActivity(mainIntent);
+                                                finish();
+
+                                            } else {
+
+                                            }
+                                            newPostProgress.setVisibility(View.INVISIBLE);
+
+                                        }
+                                    });
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
 
                                 }
                             });
+
+
 
                         }
                     });
 
 
- */
                 } else {
                     Toast.makeText(NewPostActivity.this, "이미지와 모든 항목을 입력해주세요.", Toast.LENGTH_SHORT).show();
 
@@ -214,5 +239,17 @@ public class NewPostActivity extends AppCompatActivity {
                 Exception error = result.getError();
             }
         }
+    }
+
+    public static String random() {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(MAX_LENGTH);
+        char tempChar;
+        for (int i=0; i<randomLength; i++) {
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
     }
 }

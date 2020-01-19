@@ -96,7 +96,7 @@ public class SetupActivity extends AppCompatActivity {
                         setupName.setText(name);
                         RequestOptions placeholderRequest = new RequestOptions();
                         placeholderRequest.placeholder(R.mipmap.default_image);
-                        Glide.with(SetupActivity.this).load(image).into(setupImage);
+                        Glide.with(SetupActivity.this).load(image).dontAnimate().into(setupImage);
 
                     }
                 } else {
@@ -135,8 +135,7 @@ public class SetupActivity extends AppCompatActivity {
                     }
 
                 } else {
-                    String default_uri = "https://images-eu.ssl-images-amazon.com/images/I/21cajMvmjVL.png";
-                    storeFirestore(Uri.parse(default_uri), user_name);
+                    storeFirestore(Uri.parse(String.valueOf(mainImageURI)), user_name);
                 }
                    }
                 });
@@ -169,7 +168,6 @@ public class SetupActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(SetupActivity.this, "이미지 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show();
-
         }
         Toast.makeText(SetupActivity.this, "이미지 업로드 중...", Toast.LENGTH_SHORT).show();
         Map<String, String> userMap = new HashMap<>();
