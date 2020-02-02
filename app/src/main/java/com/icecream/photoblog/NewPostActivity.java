@@ -165,9 +165,10 @@ public class NewPostActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-
+                                    String downloadThumbUri = taskSnapshot.getUploadSessionUri().toString();
                                     Map<String, Object> postMap = new HashMap<>();
                                     postMap.put("image_url", uri.toString());
+                                    postMap.put("thumb", downloadThumbUri);
                                     postMap.put("desc", desc);
                                     postMap.put("user_id", current_user_id);
                                     postMap.put("timestamp", FieldValue.serverTimestamp());
@@ -211,7 +212,7 @@ public class NewPostActivity extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(NewPostActivity.this, "이미지와 모든 항목을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewPostActivity.this, "모든 항목을 입력해주세요.", Toast.LENGTH_SHORT).show();
 
                 }
 
