@@ -25,12 +25,14 @@
 
             <ImageView
                 android:id="@+id/blog_like_btn"
-                android:layout_width="32dp"
+                android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="301dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/blog_comment_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/blog_desc"
                 app:srcCompat="@drawable/action_like_gray" />
@@ -39,11 +41,14 @@
                 android:id="@+id/blog_user_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="26dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="235dp"
+                app:layout_constraintEnd_toStartOf="@+id/blog_delete_btn"
+                app:layout_constraintHorizontal_bias="0.333"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/profile_placeholder"/>
+                app:srcCompat="@drawable/profile_placeholder" />
 
             <TextView
                 android:id="@+id/blog_user_name"
@@ -54,8 +59,7 @@
                 android:text="Username"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/blog_user_image"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/blog_date"
@@ -68,14 +72,16 @@
 
             <ImageView
                 android:id="@+id/blog_image"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="200dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="100dp"
                 android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/blog_date"
-                app:srcCompat="@drawable/post_placeholder"/>
+                app:layout_constraintTop_toBottomOf="@+id/blog_delete_btn"
+                app:srcCompat="@drawable/post_placeholder" />
 
             <TextView
                 android:id="@+id/blog_desc"
@@ -101,29 +107,35 @@
                 app:layout_constraintStart_toEndOf="@+id/blog_like_btn"
                 app:layout_constraintTop_toBottomOf="@+id/blog_desc" />
 
-            <TextView
-                android:id="@+id/blog_comment_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/blog_comment_icon"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="0 Comments"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/blog_desc" />
-
-            <ImageView
-                android:id="@+id/blog_comment_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/blog_comment_count"
+                app:layout_constraintStart_toEndOf="@+id/blog_like_btn"
                 app:layout_constraintTop_toBottomOf="@+id/blog_desc"
+                app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@drawable/ic_insert_comment_black_24dp" />
+
+            <Button
+                android:id="@+id/blog_delete_btn"
+                android:layout_width="72dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="10dp"
+                android:background="#ffffff"
+                android:enabled="false"
+                android:text="삭제"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/blog_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
